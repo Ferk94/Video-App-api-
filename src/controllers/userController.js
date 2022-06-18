@@ -25,14 +25,15 @@ const signUp = async (req, res) => {
 
             let newUser = await new User({
                 email: email,
-                password: hashPassword(password)
+                password: password
             })
             let userSaved = await newUser.save();
             token = await jwt.sign({id: userSaved._id}, 'videoApp', {
                 expiresIn:86400
             });
 
-            res.status(200).json({token, email, password})
+            let userInfo = {email: email, password: password}
+            res.status(200).json({token, userInfo})
         }
 
 
@@ -42,10 +43,10 @@ const signUp = async (req, res) => {
     
 }
 
-const login = (req, res) => {
+const login = async (req, res) => {
     try {
         const {email, password} = req.body;
-        let user = User.findOne({
+        let user = await User.findOne({
             where: {
                 email: email,
                 password: password
@@ -54,11 +55,11 @@ const login = (req, res) => {
         if(!user){
             res.status(400).json({message: 'email o contraseña incorrectas'})
         }else {
-            const token = jwt.sign({id: user._id}, 'videoApp', {
+            const token =  jwt.sign({id: user._id}, 'videoApp', {
                 expiresIn: 86400
             });
-            
-            res.status(200).json({token, email: user.email, password:user.password})
+            let userInfo = {email: user.email, password: user.password, role: user.role}
+            res.status(200).json({token, userInfo})
         }
     }catch(err){
         console.error(err)
