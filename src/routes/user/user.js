@@ -1,18 +1,23 @@
 const express = require("express");
-
+const jwt = require('jsonwebtoken');
 const { User } = require("../../db");
+const userControllers = require("../../controllers/userController");
+const verifySignUp = require('../../middlewares/verifySignUp');
+const verifyLogin = require('../../middlewares/verifyLogin');
+const authentication = require("../../middlewares/authentication");
 
 const router = express.Router();
 
-router.post("/", (req, res, next) => {
-  const { name, password } = req.body;
-  User.create({
-    name,
-    password
-  })
-    .then((newUser) => res.json(newUser))
-    .catch((err) => next(err));
-});
+
+// ruta para registrarse
+router.post('/signUp', [verifySignUp.checkEmailAndPassword], userControllers.signUp)
+
+
+//ruta para iniciar sesion
+router.post('/login', [verifyLogin.checkUser], userControllers.login)
+
+
+
 
 router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
@@ -25,24 +30,5 @@ router.delete("/:id", (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.get("/:name/:password", (req, res, next) => {
-  const { name, password } = req.params;
-  User.findOne({
-    where: {
-      name: name,
-      password: password,
-    },
-  })
-    .then((usuario) => {
-      const user = {
-        id: usuario.id,
-        name: usuario.name,
-        password: usuario.password,
-        role: usuario.role,
-      };
-      res.json(user);
-    })
-    .catch((err) => next(err));
-});
 
 module.exports = router;

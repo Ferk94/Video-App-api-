@@ -5,23 +5,37 @@ const { DataTypes } = require('sequelize');
 module.exports = (sequelize) => {
 
  return sequelize.define('Content', {
-    name: {
+    title: {
       type: DataTypes.STRING,
       allowNull: false,
-      unique: true
     },
-    type: {
-        type: DataTypes.STRING(200),
+    poster: {
+        type: DataTypes.STRING(16000),
         allowNull: false
     },
-    size: {
-        type: DataTypes.INTEGER,
+    released: {
+        type: DataTypes.STRING,
         allowNull: false
       },
-    data: {
-      type: DataTypes.BLOB,
+    director: {
+      type: DataTypes.STRING,
       allowNull: false,
-      unique: true
+    },
+    plot: {
+      type: DataTypes.STRING(300),
+      allowNull: false,
+    },
+    actors: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
   });
 };

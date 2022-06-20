@@ -1,6 +1,8 @@
 const express = require("express");
+const data = require("../../data/contentData");
 
 const { Content } = require("../../db");
+
 
 const router = express.Router();
 
@@ -15,6 +17,11 @@ router.post("/", (req, res, next) => {
     .then((newContent) => res.json(newContent))
     .catch((err) => next(err));
 });
+
+
+router.get('/dataH', (req, res, next) => {
+  res.json(data)
+})
 
 router.delete("/:id", (req, res, next) => {
   const { id } = req.params;
